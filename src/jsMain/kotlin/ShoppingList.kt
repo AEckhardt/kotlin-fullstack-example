@@ -15,7 +15,7 @@ class ShoppingList: RComponent<ShoppingListProps, RState>() {
         styledTable {
             css{
                 padding(10.px)
-                put("font-familiy","sans-serif")
+                put("font-family","sans-serif")
                 border = "5px solid gray"
             }
             thead {
