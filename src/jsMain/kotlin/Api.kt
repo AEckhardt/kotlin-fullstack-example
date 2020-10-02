@@ -26,3 +26,10 @@ suspend fun addShoppingListItem(shoppingListItem: ShoppingListItem) {
 suspend fun deleteShoppingListItem(shoppingListItem: ShoppingListItem) {
     jsonClient.delete<Unit>(endpoint + ShoppingListItem.path + "/${shoppingListItem.id}")
 }
+
+suspend fun updateShoppingListItem(shoppingListItem: ShoppingListItem) {
+    jsonClient.put<Unit>(endpoint + ShoppingListItem.path + "/${shoppingListItem.id}"){
+        contentType(ContentType.Application.Json)
+        body = shoppingListItem
+    }
+}

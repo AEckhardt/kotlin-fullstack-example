@@ -15,18 +15,18 @@ class ShoppingList: RComponent<ShoppingListProps, RState>() {
                     th{+"Priority"}
                     th{+"Item"}
                 }
-                }
-            tbody {
-            props.currentShoppingList.sortedByDescending(ShoppingListItem::priority).forEach { item ->
-                tr {
-                    key = item.toString()
-                    attrs.onClickFunction = {
-                        props.onClickItem(item)
-                    }
-                    td{+"${item.priority}"}
-                    td{+item.desc}
-                }
             }
+            tbody {
+                props.currentShoppingList.sortedByDescending(ShoppingListItem::priority).forEach { item ->
+                    tr {
+                        key = item.toString()
+                        attrs.onClickFunction = {
+                            props.onClickItem(item)
+                        }
+                        td{+"${item.priority}"}
+                        td{+item.desc}
+                    }
+                }
             }
         }
     }

@@ -63,6 +63,12 @@ fun main() {
                         val id = call.parameters["id"]?.toInt()?:error("Invalid get request")
                         call.respond(collection.find(ShoppingListItem::id eq id))
                     }
+                    put(){
+                        val id = call.parameters["id"]?.toInt()?:error("Invalid get request")
+                        val item = call.receive<ShoppingListItem>()
+                        collection.updateOne(ShoppingListItem::id eq id,item)
+                        call.respond(HttpStatusCode.OK)
+                    }
                 }
             }
         }

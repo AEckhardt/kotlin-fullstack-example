@@ -3,8 +3,13 @@ import react.dom.*
 import kotlinext.js.*
 import kotlinx.html.js.*
 import kotlinx.coroutines.*
+import styled.styledH1
+import styled.css
+import styled.StyleSheet
+import kotlinx.css.*
 
 private val scope = MainScope()
+
 
 val App = functionalComponent<RProps> { _ ->
     val (shoppingList, setShoppingList) = useState(emptyList<ShoppingListItem>())
@@ -15,21 +20,26 @@ val App = functionalComponent<RProps> { _ ->
         }
     }
 
-    h1 {
+    styledH1 {
+        css {
+            padding(vertical = 16.px)
+            put("color","#808080")
+            put("font-family","sans-serif")
+        }
         +"Full-Stack Shopping List"
     }
-    ul {
-        shoppingList.sortedByDescending(ShoppingListItem::priority).forEach { item ->
-            li {
-                key = item.toString()
-                attrs.onClickFunction = {
-                    scope.launch {
-                        deleteShoppingListItem(item)
-                        setShoppingList(getShoppingList())
-                    }
-                }
-                +"[${item.priority}] ${item.desc} "
-            }
+
+    shoppingListComponent {
+        currentShoppingList = shoppingList
+        onClickItem = {item -> scope.launch {
+            deleteShoppingListItem(item)
+            setShoppingList(getShoppingList())}
+        }
+        editItem = {
+            item -> scope.launch {
+            updateShoppingListItem(item)
+            setShoppingList(getShoppingList())
+        }
         }
     }
     child(
