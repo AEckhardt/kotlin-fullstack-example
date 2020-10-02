@@ -1,0 +1,7 @@
+  shoppingListComponent {
+        currentShoppingList = shoppingList
+        onClickItem = {item -> scope.launch {
+            deleteShoppingListItem(item)
+            setShoppingList(getShoppingList())}
+        }
+    }
