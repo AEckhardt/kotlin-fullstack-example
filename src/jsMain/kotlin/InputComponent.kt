@@ -25,6 +25,9 @@ val InputComponent = functionalComponent<InputProps> { props ->
 
     form {
         attrs.onSubmitFunction = submitHandler
+        h2{
+            +"Add new Item"
+        }
         input(InputType.text) {
             attrs.onChangeFunction = changeHandler
             attrs.value = text
