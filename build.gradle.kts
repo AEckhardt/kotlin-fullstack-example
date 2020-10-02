@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.4.10"
+val kotlinVersion = "1.4.0"
 val serializationVersion = "1.0.0-RC"
 val ktorVersion = "1.4.0"
 
@@ -63,10 +63,10 @@ kotlin {
                 implementation("io.ktor:ktor-client-json-js:$ktorVersion")
                 implementation("io.ktor:ktor-client-serialization-js:$ktorVersion")
 
-                implementation("org.jetbrains:kotlin-react:16.13.1-pre.123-kotlin-1.4.10")
-                implementation("org.jetbrains:kotlin-react-dom:16.13.1-pre.123-kotlin-1.4.10")
-                implementation("org.jetbrains:kotlin-css:1.0.0-pre.123-kotlin-1.4.10")
-                implementation("org.jetbrains:kotlin-styled:5.2.0-pre.123-kotlin-1.4.10")
+                implementation("org.jetbrains:kotlin-react:16.13.1-pre.110-kotlin-1.4.0")
+                implementation("org.jetbrains:kotlin-react-dom:16.13.1-pre.110-kotlin-1.4.0")
+                implementation("org.jetbrains:kotlin-css:1.0.0-pre.110-kotlin-1.4.0")
+                implementation("org.jetbrains:kotlin-styled:1.0.0-pre.110-kotlin-1.4.0")
                 implementation(npm("react", "16.13.1"))
                 implementation(npm("react-dom", "16.13.1"))
             }
