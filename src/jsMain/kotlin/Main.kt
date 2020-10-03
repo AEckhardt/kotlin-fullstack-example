@@ -10,8 +10,10 @@ fun main() {
         styledDiv{
             css {
                 padding(3.rem)
-                backgroundColor = Color.lightGreen
-                color = Color.white
+                backgroundColor = Color("#9adf9a")
+                color = Color.mistyRose
+                put("font-family","sans-serif")
+
             }
         child(App)
         }

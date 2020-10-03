@@ -13,43 +13,55 @@ external interface ShoppingListProps : RProps {
 class ShoppingList: RComponent<ShoppingListProps, RState>() {
     override fun RBuilder.render() {
         styledTable {
-            css{
+            css {
                 padding(10.px)
-                put("font-family","sans-serif")
-                border = "5px solid gray"
+                backgroundColor = Color.antiqueWhite
+                color = Color.cornflowerBlue
+                borderRadius = LinearDimension("3px")
             }
             thead {
-                styledTr{
-                    css{put("font-family","sans-serif")}
-                    th{+"Priority"}
-                    th{+"Item"}
+                styledTr {
+                    css {
+                        borderBottom = "2px solid lightgrey"
+                    }
+                    th { +"Priority" }
+                    th { +"Item" }
                 }
             }
             tbody {
                 props.currentShoppingList.sortedByDescending(ShoppingListItem::priority).forEach { item ->
                     styledTr {
-                        css{
-                            put("font-family","sans-serif")
-                            padding(1.rem)
+                        css {
+                            hover {
+                                backgroundColor = Color.pink
+                            }
                         }
                         key = item.toString()
-                        styledTd{
-                            css{
-                                put("text-align","center")
+                        styledTd {
+                            css {
+                                put("text-align", "center")
+                                padding(horizontal = 2.rem)
+                                width = LinearDimension("6rem")
                             }
-                            +"${item.priority}"}
-                        styledTd{
-                            css{
-                                margin(1.rem)
+                            +"${item.priority}"
+                        }
+                        styledTd {
+                            css {
+                                width = LinearDimension("12rem")
                             }
-                            +item.desc}
-                        td{
-                            styledButton{
-                                css{
-                                    padding(1.rem)
-                                    put("font-family","sans-serif")
-                                    color = Color.aqua
-                                    backgroundColor = Color.azure
+                            +item.desc
+                        }
+                        styledTd {
+                            css {
+                                width = LinearDimension("4rem")
+                            }
+                            styledButton {
+                                css {
+                                    backgroundColor = Color.cornflowerBlue
+                                    width = LinearDimension("4rem")
+                                    border = "3px solid cornflowerblue"
+                                    borderRadius = LinearDimension("3px")
+                                    color = Color.blanchedAlmond
                                 }
                                 attrs.onClickFunction = {
                                     props.editItem(item)
@@ -57,13 +69,17 @@ class ShoppingList: RComponent<ShoppingListProps, RState>() {
                                 +"edit"
                             }
                         }
-                        td{
-                            styledButton{
-                                css{
-                                    padding(1.rem)
-                                    put("font-family","sans-serif")
-                                    color = Color.aqua
-                                    backgroundColor = Color.azure
+                        styledTd {
+                            css {
+                                width = LinearDimension("4rem")
+                            }
+                            styledButton {
+                                css {
+                                    backgroundColor = Color.cornflowerBlue
+                                    border = "3px solid cornflowerblue"
+                                    borderRadius = LinearDimension("3px")
+                                    width = LinearDimension("4rem")
+                                    color = Color.blanchedAlmond
 
                                 }
                                 attrs.onClickFunction = {

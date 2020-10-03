@@ -31,8 +31,6 @@ val App = functionalComponent<RProps> { _ ->
     styledH1 {
         css {
             padding(vertical = 16.px)
-            put("color","#808080")
-            put("font-family","sans-serif")
         }
         +"Full-Stack Shopping List"
     }

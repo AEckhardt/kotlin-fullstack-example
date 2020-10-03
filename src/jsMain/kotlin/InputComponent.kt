@@ -4,6 +4,9 @@ import kotlinx.html.js.*
 import kotlinx.html.InputType
 import org.w3c.dom.events.Event
 import org.w3c.dom.HTMLInputElement
+import styled.*
+import kotlinx.css.*
+
 
 external interface InputProps : RProps {
     var onSubmit: (String) -> Unit
@@ -28,7 +31,16 @@ val InputComponent = functionalComponent<InputProps> { props ->
         h2{
             +"Add new Item"
         }
-        input(InputType.text) {
+        styledInput(InputType.text) {
+            css{
+                    padding(10.px)
+                    width = LinearDimension("12rem")
+                    borderRadius = LinearDimension("3px")
+                    backgroundColor = Color.blanchedAlmond
+                    color = Color.cornflowerBlue
+                    fontSize = 1.rem
+
+            }
             attrs.onChangeFunction = changeHandler
             attrs.value = text
         }

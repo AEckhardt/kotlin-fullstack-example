@@ -1,7 +1,8 @@
+import kotlinx.css.*
 import react.*
 import react.dom.*
 import kotlinx.html.js.*
-import kotlinx.html.InputType
+import styled.*
 import org.w3c.dom.events.Event
 import org.w3c.dom.HTMLInputElement
 
@@ -22,8 +23,8 @@ val EditComponent = functionalComponent<ChangeProps> { props ->
 
     val submitHandler: (Event) -> Unit = {
         it.preventDefault()
-        print("submitted")
-        props.onSubmit(ShoppingListItem(desc,prio.toInt()))
+        if (desc!="" && prio!="")
+            props.onSubmit(ShoppingListItem(desc,prio.toInt()))
     }
 
     val changeDescHandler: (Event) -> Unit = {
@@ -41,18 +42,46 @@ val EditComponent = functionalComponent<ChangeProps> { props ->
         h2{
             +"Change Item"
         }
-        input {
+        styledInput {
+            css{
+                padding(10.px)
+                margin(right = 10.px)
+                width = LinearDimension("4rem")
+                borderRadius = LinearDimension("3px")
+                backgroundColor = Color.blanchedAlmond
+                color = Color.cornflowerBlue
+                fontSize = 1.rem
+
+            }
+            attrs.onChangeFunction = changePriorityHandler
+            attrs.value = prio
+            attrs.placeholder = ""
+        }
+        styledInput {
+            css{
+                padding(10.px)
+                margin(right = 10.px)
+                width = LinearDimension("12rem")
+                borderRadius = LinearDimension("3px")
+                backgroundColor = Color.blanchedAlmond.darken(15)
+                color = Color.cornflowerBlue
+                fontSize = 1.rem
+
+            }
             attrs.onChangeFunction = changeDescHandler
             attrs.value = desc
             attrs.placeholder = "Description"
             attrs.disabled = true
         }
-        input {
-            attrs.onChangeFunction = changePriorityHandler
-            attrs.value = prio.toString()
-            attrs.placeholder = ""
-        }
-        button{
+        styledButton{
+            css{
+                padding(10.px)
+                backgroundColor = Color.cornflowerBlue
+                width = LinearDimension("6rem")
+                border = "3px solid cornflowerblue"
+                borderRadius = LinearDimension("3px")
+                color = Color.blanchedAlmond
+            }
             +"update"
         }
     }
