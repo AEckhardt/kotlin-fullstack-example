@@ -8,6 +8,13 @@ import io.ktor.routing.*
 import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.*
+/*
 import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.*
 import org.litote.kmongo.reactivestreams.KMongo
@@ -20,8 +27,24 @@ val connectionString: ConnectionString? = System.getenv("MONGODB_URI")?.let {
 val client = if (connectionString != null) KMongo.createClient(connectionString).coroutine else KMongo.createClient().coroutine
 val database = client.getDatabase(connectionString?.database ?: "test")
 val collection = database.getCollection<ShoppingListItem>()
+*/
+object ShoppingList : IntIdTable() {
+    val description = varchar("description", 50)
+    val priority = integer("priority")
+}
+class ShoppingItem(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<ShoppingItem>(ShoppingList)
 
+    var description by ShoppingList.description
+    var priority by ShoppingList.priority
+}
 fun main() {
+    val database = Database.connect("jdbc:postgresql://localhost:5432/shoppinglist_table", driver = "org.postgresql.Driver",
+            user = "api_user", password = "password")
+    transaction(database){
+        //addLogger(StdOutSqlLogger)
+        SchemaUtils.create(ShoppingList)
+    }
     val port = System.getenv("PORT")?.toInt() ?: 9090
 
     embeddedServer(Netty, port) {
@@ -49,26 +72,49 @@ fun main() {
             }
             route(ShoppingListItem.path){
                 get {
-                    call.respond(collection.find().toList())
+                    val items : ArrayList<ShoppingListItem> = arrayListOf()
+                    transaction(database) {
+                        ShoppingList.selectAll().forEach{items.add(ShoppingListItem(it[ShoppingList.description],it[ShoppingList.priority]))}
+                    }
+                    call.respond(items)
                 }
                 post {
-                    collection.insertOne(call.receive<ShoppingListItem>())
+                    val received = call.receive<ShoppingListItem>()
+                    transaction(database) {
+                        ShoppingList.insertAndGetId{
+                            it[description] = received.desc
+                            it[priority] = received.priority
+                        }
+                    }
                     call.respond(HttpStatusCode.OK)
                 }
                 route("/{id}"){
+
                     delete(){
-                        val id = call.parameters["id"]?.toInt()?:error("Invalid delete request")
-                        collection.deleteOne(ShoppingListItem::id eq id)
+                        val id = call.parameters["id"]?.toInt()?:error("Invalid get request")
+                        transaction(database) {
+                            ShoppingList.deleteWhere{ShoppingList.id eq id}
+                        }
                         call.respond(HttpStatusCode.OK)
                     }
                     get() {
                         val id = call.parameters["id"]?.toInt()?:error("Invalid get request")
-                        call.respond(collection.find(ShoppingListItem::id eq id))
+                        val items : ArrayList<ShoppingListItem> = arrayListOf()
+                        transaction(database) {
+                            ShoppingList.select{ShoppingList.id eq id}.forEach{items.add(ShoppingListItem(it[ShoppingList.description],it[ShoppingList.priority]))}
+                        }
+                        call.respond(items)
                     }
+
                     put(){
                         val id = call.parameters["id"]?.toInt()?:error("Invalid get request")
-                        val item = call.receive<ShoppingListItem>()
-                        collection.updateOne(ShoppingListItem::id eq id,item)
+                        val received = call.receive<ShoppingListItem>()
+                        transaction(database) {
+                            ShoppingList.update({ShoppingList.id eq id}){
+                            it[ShoppingList.priority] = received.priority
+                            it[ShoppingList.description] = received.desc
+                            }
+                        }
                         call.respond(HttpStatusCode.OK)
                     }
                 }

@@ -35,6 +35,7 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:$serializationVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
+                implementation("org.jetbrains.exposed:exposed-dao:0.27.1")
             }
         }
         val commonTest by getting {
@@ -52,6 +53,10 @@ kotlin {
                 implementation("ch.qos.logback:logback-classic:1.2.3")
                 implementation("io.ktor:ktor-websockets:$ktorVersion")
                 implementation("org.litote.kmongo:kmongo-coroutine-serialization:4.1.1")
+                implementation("org.jetbrains.exposed:exposed-core:0.27.1")
+                implementation("org.jetbrains.exposed:exposed-dao:0.27.1")
+                implementation("org.jetbrains.exposed:exposed-jdbc:0.27.1")
+                implementation("org.postgresql:postgresql:42.2.16")
             }
         }
 

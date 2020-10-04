@@ -1,0 +1,124 @@
+GET http://localhost:9090/shoppingList/
+
+<> 2020-10-04T090205.200.json
+
+###
+
+DELETE http://localhost:9090/shoppingList/4
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+<> 2020-10-04T090116.200.json
+
+###
+
+PUT http://localhost:9090/shoppingList/4
+Content-Type: application/json
+
+{
+  "desc": "Honey",
+  "priority": 4
+}
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+<> 2020-10-04T090038.200.json
+
+###
+
+POST http://localhost:9090/shoppingList/
+Content-Type: application/json
+
+{
+  "desc": "Honey",
+  "priority": 5
+}
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+<> 2020-10-04T090010.200.json
+
+###
+
+GET http://localhost:9090/shoppingList/1
+
+<> 2020-10-04T085955.200.json
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+<> 2020-10-04T081815.200.json
+
+###
+
+GET http://localhost:9090/shoppingList/1
+
+<> 2020-10-04T081218.200.json
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+<> 2020-10-04T081110.200.json
+
+###
+
+GET http://localhost:9090/shoppingList/1
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+<> 2020-10-04T073743.200.json
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+###
+
+PUT http://localhost:9090/shoppingList/-2127779739
+Content-Type: application/json
+
+{
+  "desc": "Honey",
+  "priority": 5
+}
+
+###
+
+GET http://localhost:9090/shoppingList
+
+<> 2020-10-01T105008.200.json
+
+###
+
+POST http://localhost:9090/shoppingList
+Content-Type: application/json
+
+{
+  "desc": "Peppers 🌶",
+  "priority": 5
+}
+
+###
+
