@@ -1,19 +1,27 @@
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.http.*
-import io.ktor.http.content.*
-import io.ktor.request.*
-import io.ktor.response.*
+import io.ktor.application.call
+import io.ktor.application.install
+import io.ktor.features.CORS
+import io.ktor.features.Compression
+import io.ktor.features.ContentNegotiation
+import io.ktor.features.gzip
+import io.ktor.http.ContentType
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.resources
+import io.ktor.http.content.static
+import io.ktor.request.receive
+import io.ktor.response.respond
+import io.ktor.response.respondText
 import io.ktor.routing.*
-import io.ktor.serialization.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
+import io.ktor.serialization.json
+import io.ktor.server.engine.embeddedServer
+import io.ktor.server.netty.Netty
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.*
 
 object ShoppingList : IntIdTable() {
     val desc_id = integer("desc_id")
@@ -27,10 +35,16 @@ class ShoppingItem(id: EntityID<Int>) : IntEntity(id) {
 }
 
 fun main() {
-    /*val database = Database.connect("jdbc:postgresql://localhost:5432/shoppinglist_table", driver = "org.postgresql.Driver",
-            user = "api_user", password = "password")*/
-    val database = Database.connect(System.getenv("JDBC_DATABASE_URI"), driver = "org.postgresql.Driver",
-    user = System.getenv("JDBC_DATABASE_USERNAME"), password = System.getenv("JDBC_DATABASE_PASSWORD"))
+    val databaseURL = System.getenv("JDBC_DATABASE_URL")?.toString() ?: "jdbc:postgresql://localhost:5432/shoppinglist_table"
+    val user = System.getenv("JDBC_DATABASE_USERNAME")?.toString() ?: "api_user"
+    val password = System.getenv("JDBC_DATABASE_PASSWORD")?.toString() ?: "password"
+
+    val database = Database.connect(
+            databaseURL,
+            driver="org.postgresql.Driver",
+            user = user,
+            password = password
+    )
     transaction(database){
         SchemaUtils.create(ShoppingList)
     }
