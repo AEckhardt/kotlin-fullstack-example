@@ -1,6 +1,6 @@
 # Project exclude paths
 .gradle/
-build
+build/
 .idea/
 node_modules/
 *.env
