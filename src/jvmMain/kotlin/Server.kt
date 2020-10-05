@@ -23,113 +23,119 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
-object ShoppingList : IntIdTable() {
-    val desc_id = integer("desc_id")
-    val description = varchar("description", 50)
-    val priority = integer("priority")
-}
-class ShoppingItem(id: EntityID<Int>) : IntEntity(id) {
+
+
+    class ShoppingItem(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ShoppingItem>(ShoppingList)
+
     var description by ShoppingList.description
     var priority by ShoppingList.priority
 }
-
-fun main() {
-    val databaseURL = System.getenv("JDBC_DATABASE_URL")?.toString() ?: "jdbc:postgresql://localhost:5432/shoppinglist_table"
-    val user = System.getenv("JDBC_DATABASE_USERNAME")?.toString() ?: "api_user"
-    val password = System.getenv("JDBC_DATABASE_PASSWORD")?.toString() ?: "password"
-
-    val database = Database.connect(
-            databaseURL,
-            driver="org.postgresql.Driver",
-            user = user,
-            password = password
-    )
-    transaction(database){
-        SchemaUtils.create(ShoppingList)
-    }
-    val port = System.getenv("PORT")?.toInt() ?: 9090
-
-    embeddedServer(Netty, port) {
-        install(ContentNegotiation) {
-            json()
+        object ShoppingList : IntIdTable() {
+            val desc_id = integer("desc_id")
+            val description = varchar("description", 50)
+            val priority = integer("priority")
         }
-        install(CORS) {
-            method(HttpMethod.Get)
-            method(HttpMethod.Post)
-            method(HttpMethod.Delete)
-            anyHost()
+        fun main() {
+        val databaseURL = System.getenv("JDBC_DATABASE_URL")?.toString()
+                ?: "jdbc:postgresql://localhost:5432/shoppinglist_table"
+        val user = System.getenv("JDBC_DATABASE_USERNAME")?.toString() ?: "api_user"
+        val password = System.getenv("JDBC_DATABASE_PASSWORD")?.toString() ?: "password"
+
+        val database = Database.connect(
+                databaseURL,
+                driver = "org.postgresql.Driver",
+                user = user,
+                password = password
+        )
+        transaction(database) {
+            addLogger(StdOutSqlLogger)
+            SchemaUtils.create(ShoppingList)
         }
-        install(Compression) {
-            gzip()
-        }
-        routing {
-            get("/"){
-                call.respondText(
-                    this::class.java.classLoader.getResource("index.html")!!.readText(),
-                    ContentType.Text.Html
-                )
+        val port = System.getenv("PORT")?.toInt() ?: 9090
+
+        embeddedServer(Netty, port) {
+            install(ContentNegotiation) {
+                json()
             }
-            static("/"){
-                resources("")
+            install(CORS) {
+                method(HttpMethod.Get)
+                method(HttpMethod.Post)
+                method(HttpMethod.Delete)
+                anyHost()
             }
-            route(ShoppingListItem.path){
-                get {
-                    val items : ArrayList<ShoppingListItem> = arrayListOf()
-                    transaction(database) {
-                        ShoppingList.selectAll().forEach{
-                            items.add(ShoppingListItem(it[ShoppingList.description],it[ShoppingList.priority]))}
-                    }
-                    call.respond(items)
+            install(Compression) {
+                gzip()
+            }
+            routing {
+                get("/") {
+                    call.respondText(
+                            this::class.java.classLoader.getResource("index.html")!!.readText(),
+                            ContentType.Text.Html
+                    )
                 }
-                post {
-                    val received = call.receive<ShoppingListItem>()
-                    transaction(database) {
-                        ShoppingList.insertAndGetId{
-                            it[desc_id] = received.id
-                            it[description] = received.desc
-                            it[priority] = received.priority
-                        }
-                    }
-                    call.respond(HttpStatusCode.OK)
+                static("/") {
+                    resources("")
                 }
-                route("/{id}"){
-
-                    delete(){
-                        val id = call.parameters["id"]?.toInt()?:error("Invalid get request")
+                route(ShoppingListItem.path) {
+                    get {
+                        val items: ArrayList<ShoppingListItem> = arrayListOf()
                         transaction(database) {
-                            ShoppingList.deleteWhere{ShoppingList.desc_id eq id}
-                        }
-                        call.respond(HttpStatusCode.OK)
-                    }
-                    get() {
-                        val id = call.parameters["id"]?.toInt()?:error("Invalid get request")
-                        val items : ArrayList<ShoppingListItem> = arrayListOf()
-                        transaction(database) {
-                            ShoppingList.select{ShoppingList.desc_id eq id}.forEach{
-                                items.add(ShoppingListItem(
-                                        it[ShoppingList.description],
-                                        it[ShoppingList.priority]
-                                ))}
+                            ShoppingList.selectAll().forEach {
+                                items.add(ShoppingListItem(it[ShoppingList.description], it[ShoppingList.priority]))
+                            }
                         }
                         call.respond(items)
                     }
-
-                    put(){
-                        val id = call.parameters["id"]?.toInt()?:error("Invalid get request")
+                    post {
                         val received = call.receive<ShoppingListItem>()
                         transaction(database) {
-                            ShoppingList.update({ShoppingList.desc_id eq id}){
+                            ShoppingList.insertAndGetId {
                                 it[desc_id] = received.id
-                                it[ShoppingList.priority] = received.priority
-                                it[ShoppingList.description] = received.desc
+                                it[description] = received.desc
+                                it[priority] = received.priority
                             }
                         }
                         call.respond(HttpStatusCode.OK)
                     }
+                    route("/{id}") {
+
+                        delete() {
+                            val id = call.parameters["id"]?.toInt() ?: error("Invalid get request")
+                            transaction(database) {
+                                ShoppingList.deleteWhere { ShoppingList.desc_id eq id }
+                            }
+                            call.respond(HttpStatusCode.OK)
+                        }
+                        get() {
+                            val id = call.parameters["id"]?.toInt() ?: error("Invalid get request")
+                            val items: ArrayList<ShoppingListItem> = arrayListOf()
+                            transaction(database) {
+                                ShoppingList.select { ShoppingList.desc_id eq id }.forEach {
+                                    items.add(ShoppingListItem(
+                                            it[ShoppingList.description],
+                                            it[ShoppingList.priority]
+                                    ))
+                                }
+                            }
+                            call.respond(items)
+                        }
+
+                        put() {
+                            val id = call.parameters["id"]?.toInt() ?: error("Invalid get request")
+                            val received = call.receive<ShoppingListItem>()
+                            transaction(database) {
+                                ShoppingList.update({ ShoppingList.desc_id eq id }) {
+                                    it[desc_id] = received.id
+                                    it[ShoppingList.priority] = received.priority
+                                    it[ShoppingList.description] = received.desc
+                                }
+                            }
+                            call.respond(HttpStatusCode.OK)
+                        }
+                    }
                 }
             }
-        }
-    }.start(wait = true)
+        }.start(wait = true)
 
-}
+    }
