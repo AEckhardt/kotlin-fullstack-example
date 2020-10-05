@@ -1,3 +1,39 @@
+PUT http://localhost:9090/shoppingList/1967772793
+Content-Type: application/json
+
+{
+  "desc": "Bananas",
+  "priority": 3
+}
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+<> 2020-10-05T100119.200.json
+
+###
+
+DELETE http://localhost:9090/shoppingList/69909275
+
+###
+
+GET http://localhost:9090/shoppingList/69909275
+
+<> 2020-10-05T100043.200.json
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+<> 2020-10-05T095547.200.json
+
+###
+
+GET http://localhost:9090/shoppingList/
+
+###
+
 GET http://localhost:9090/shoppingList/
 
 <> 2020-10-04T090205.200.json
