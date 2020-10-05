@@ -1,0 +1,7 @@
+PUT http://localhost:9090/shoppingList/1967772793
+Content-Type: application/json
+
+{
+  "desc": "Bananas",
+  "priority": 3
+}
