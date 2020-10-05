@@ -5,5 +5,4 @@
 /build/js/packages/vollstapel/kotlin/
 /.idea/
 /node_modules/
-
-.env
+/.env
