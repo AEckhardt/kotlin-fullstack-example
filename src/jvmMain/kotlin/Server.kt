@@ -27,8 +27,10 @@ class ShoppingItem(id: EntityID<Int>) : IntEntity(id) {
 }
 
 fun main() {
-    val database = Database.connect("jdbc:postgresql://localhost:5432/shoppinglist_table", driver = "org.postgresql.Driver",
+    //val database = Database.connect("jdbc:postgresql://localhost:5432/shoppinglist_table", driver = "org.postgresql.Driver",
             user = "api_user", password = "password")
+    val database = Database.connect(System.getenv("JDBC_DATABASE_URL"), driver = "org.postgresql.Driver",
+    user = System.getenv("JDBC_DATABASE_USERNAME"), password = System.getenv("JDBC_DATABASE_PASSWORD"))
     transaction(database){
         SchemaUtils.create(ShoppingList)
     }
