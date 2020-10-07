@@ -6,7 +6,6 @@ import kotlinx.coroutines.*
 import styled.styledH1
 import styled.css
 import kotlinx.css.*
-import shoppinglist.shoppinglist.ShoppingListItem
 
 private val scope = MainScope()
 

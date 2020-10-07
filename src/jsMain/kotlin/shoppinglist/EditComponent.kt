@@ -7,7 +7,6 @@ import kotlinx.html.js.*
 import styled.*
 import org.w3c.dom.events.Event
 import org.w3c.dom.HTMLInputElement
-import shoppinglist.shoppinglist.ShoppingListItem
 
 external interface ChangeProps : RProps {
     var shoppingListItem: ShoppingListItem
