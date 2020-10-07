@@ -80,7 +80,7 @@ kotlin {
 }
 
 application {
-    mainClassName = "ServerKt"
+    mainClassName = "shoppinglist.ServerKt"
 }
 
 // include JS artifacts in any JAR we generate

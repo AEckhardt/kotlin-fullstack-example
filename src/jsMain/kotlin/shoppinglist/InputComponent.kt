@@ -1,3 +1,5 @@
+package shoppinglist
+
 import react.*
 import react.dom.*
 import kotlinx.html.js.*

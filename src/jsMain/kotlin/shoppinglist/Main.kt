@@ -1,3 +1,5 @@
+package shoppinglist
+
 import react.child
 import react.dom.render
 import kotlinx.browser.document

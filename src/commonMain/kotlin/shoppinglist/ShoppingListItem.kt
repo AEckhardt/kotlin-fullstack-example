@@ -1,3 +1,4 @@
+package shoppinglist
 import kotlinx.serialization.Serializable
 
 @Serializable

@@ -1,3 +1,5 @@
+package shoppinglist
+
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CORS
@@ -22,7 +24,6 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-
 
 
 class ShoppingItem(id: EntityID<Int>) : IntEntity(id) {
@@ -126,9 +127,9 @@ fun main() {
                         val received = call.receive<ShoppingListItem>()
                         transaction(database) {
                             ShoppingList.update({ ShoppingList.desc_id eq id }) {
-                                it[ShoppingList.desc_id] = received.id
-                                it[ShoppingList.priority] = received.priority
-                                it[ShoppingList.description] = received.desc
+                                it[desc_id] = received.id
+                                it[priority] = received.priority
+                                it[description] = received.desc
                             }
                         }
                         call.respond(HttpStatusCode.OK)

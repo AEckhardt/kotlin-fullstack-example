@@ -1,12 +1,12 @@
+package shoppinglist
+
 import react.*
-import react.dom.*
 import kotlinext.js.*
-import kotlinx.html.js.*
 import kotlinx.coroutines.*
 import styled.styledH1
 import styled.css
-import styled.StyleSheet
 import kotlinx.css.*
+import shoppinglist.shoppinglist.ShoppingListItem
 
 private val scope = MainScope()
 
@@ -50,7 +50,7 @@ val App = functionalComponent<RProps> { _ ->
     }
     if (editing){
     child(
-        EditComponent,
+            EditComponent,
         props = jsObject {
             shoppingListItem = currentItem
             onSubmit = { item ->
@@ -65,7 +65,7 @@ val App = functionalComponent<RProps> { _ ->
 
     ) }else{
     child(
-        InputComponent,
+            InputComponent,
         props = jsObject {
             onSubmit = { input ->
                 val cartItem = ShoppingListItem(input.replace("!", ""), input.count { it == '!' })

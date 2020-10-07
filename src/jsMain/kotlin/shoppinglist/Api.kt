@@ -1,3 +1,5 @@
+package shoppinglist
+
 import io.ktor.http.*
 import io.ktor.client.*
 import io.ktor.client.request.*

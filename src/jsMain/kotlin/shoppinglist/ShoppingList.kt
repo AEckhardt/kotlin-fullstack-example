@@ -1,3 +1,5 @@
+package shoppinglist
+
 import kotlinx.html.js.onClickFunction
 import react.*
 import react.dom.*
