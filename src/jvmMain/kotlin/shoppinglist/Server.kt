@@ -28,7 +28,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class ShoppingItem(id: EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ShoppingItem>(ShoppingList)
-
     var description by ShoppingList.description
     var priority by ShoppingList.priority
 }
@@ -62,6 +61,7 @@ fun main() {
         install(CORS) {
             method(HttpMethod.Get)
             method(HttpMethod.Post)
+            method(HttpMethod.Put)
             method(HttpMethod.Delete)
             anyHost()
         }
